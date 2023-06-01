@@ -19,7 +19,9 @@ def get_data(feature):
         'depth': feature.get('geometry', {}).get('coordinates', [None, None, None])[2]
     }
 
-def job(starttime, endtime, db_name, db_table, db_password):
+def job(db_name, db_table, db_password):
+    starttime = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+    endtime = datetime.datetime.now().strftime('%Y-%m-%d')
     # Your extraction code
     url = 'https://earthquake.usgs.gov/fdsnws/event/1/query'
     params = {
@@ -46,10 +48,6 @@ def job(starttime, endtime, db_name, db_table, db_password):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scheduled job to query USGS Earthquake API and store data in PostgreSQL')
     parser.add_argument('--frequency', type=int, default=1, help='Frequency of job execution in minutes (e.g., 10min, 1h, 1d)')
-    parser.add_argument('--starttime', default=(datetime.datetime.now() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
-                        help='Start time for querying data in format YYYY-MM-DD (default: last 24 hours)')
-    parser.add_argument('--endtime', default=datetime.datetime.now().strftime('%Y-%m-%d'), 
-                        help='End time for querying data in format YYYY-MM-DD (default: today)')
     parser.add_argument('--db_name', default="landing_earthquake", 
                         help='db name')
     parser.add_argument('--db_table', default="raw_measures", 
@@ -59,7 +57,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Schedule the job based on the specified frequency
-    schedule.every(args.frequency).minutes.do(job, args.starttime, args.endtime, args.db_name, args.db_table, args.db_password)
+    schedule.every(args.frequency).minutes.do(job, args.db_name, args.db_table, args.db_password)
 
     while True:
         schedule.run_pending()
