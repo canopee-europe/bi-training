@@ -8,3 +8,12 @@ Lien Drive - PowerBI, Postgres et Pentaho : https://drive.google.com/drive/folde
 ## SQL Server credentials
 username: sa  
 password: cei5thi1Ahng
+
+# VM details
+rug.gklearn.fr/
+
+d153137
+d153137
+
+P@ssw0rd
+
