@@ -3,3 +3,4 @@ pandas
 SQLAlchemy
 schedule
 psycopg2-binary
+pyinstaller
